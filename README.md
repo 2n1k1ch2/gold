@@ -1,0 +1,2 @@
+# gold
+golang leak detector
