@@ -1,0 +1,24 @@
+run:
+  timeout: 5m
+  build-tags:
+    - exclude_swagger
+linters:
+  enable:
+    - govet
+    - staticcheck
+    - gosimple
+    - unused
+    - errcheck
+    - revive
+
+linters-settings:
+  revive:
+    severity: warning
+
+issues:
+  exclude-dirs:
+    - docs
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - errcheck
