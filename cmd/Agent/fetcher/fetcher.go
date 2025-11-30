@@ -3,7 +3,6 @@ package fetcher
 import (
 	"bytes"
 	"encoding/gob"
-	"log"
 	"runtime"
 	"runtime/metrics"
 	"time"
@@ -13,15 +12,13 @@ type DefaultFetcher struct {
 	IncludeBlockProfile bool
 	IncludeMutexProfile bool
 	IncludeMetrics      bool
-	Period              time.Duration
 }
 
-func NewRuntimeFetcher(BlockProfile, MutexProfile, Metrics bool, Period time.Duration) *DefaultFetcher {
+func NewRuntimeFetcher(BlockProfile, MutexProfile, Metrics bool) *DefaultFetcher {
 	return &DefaultFetcher{
 		IncludeBlockProfile: BlockProfile,
 		IncludeMutexProfile: MutexProfile,
 		IncludeMetrics:      Metrics,
-		Period:              Period,
 	}
 }
 
@@ -105,9 +102,6 @@ func (f *DefaultFetcher) Collect() (*RuntimeSnapshot, error) {
 	return snap, nil
 }
 
-func Send(snap *RuntimeSnapshot) {
-
-}
 func convertWithGob(records []runtime.BlockProfileRecord) ([]byte, error) {
 	var buffer bytes.Buffer
 	encoder := gob.NewEncoder(&buffer)
