@@ -1,2 +1,4 @@
+github.com/google/pprof v0.0.0-20251114195745-4902fdda35c8 h1:3DsUAV+VNEQa2CUVLxCY3f87278uWfIDhJnbdvDjvmE=
+github.com/google/pprof v0.0.0-20251114195745-4902fdda35c8/go.mod h1:I6V7YzU0XDpsHqbsyrghnFZLO1gwK6NPTNvmetQIk9U=
 google.golang.org/protobuf v1.36.10 h1:AYd7cD/uASjIL6Q9LiTjz8JLcrh/88q5UObnmY3aOOE=
 google.golang.org/protobuf v1.36.10/go.mod h1:HTf+CrKn2C3g5S8VImy6tdcUvCska2kB7j23XfzDpco=
