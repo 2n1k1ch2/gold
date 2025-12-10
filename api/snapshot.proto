@@ -3,7 +3,7 @@ package fetcher;
 
 option go_package = "github.com/2n1k1ch2/gold/cmd/Agent/fetcher;snapshot";
 message SnapShot {
-  string name =1;
+  string ServiceName =1;
   int64 timestamp=2;
   bytes GoroutineDump=3;
   bytes BlockProfile=4;
