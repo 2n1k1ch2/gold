@@ -90,7 +90,7 @@ func (f *DefaultFetcher) Collect() (*RuntimeSnapshot, error) {
 	// 6) Build snapshot
 	// ---------------------
 	snap := &RuntimeSnapshot{
-		Service:        "",
+		ServiceName:    "",
 		Timestamp:      time.Now().Unix(),
 		GoroutineDump:  gorDump,
 		BlockProfile:   blockBuf,
