@@ -2,6 +2,7 @@ package parser
 
 import (
 	"errors"
+	"gold/cmd/Agent/fetcher"
 	"log"
 	"sync"
 )
@@ -11,8 +12,10 @@ var (
 )
 
 type Parser struct {
-	logger log.Logger
-	wg     sync.WaitGroup
+	logger             log.Logger
+	RawSnapShotChan    <-chan fetcher.RuntimeSnapshot
+	ParsedSnapShotChan chan<- ParsedSnapShot
+	wg                 sync.WaitGroup
 }
 
 type ParsedSnapShot struct {

@@ -3,7 +3,8 @@ package parser
 import (
 	"fmt"
 	"github.com/google/pprof/profile"
-	"gold/cmd/Agent/fetcher"
+	snapshot "gold/api"
+
 	"log"
 	"regexp"
 	"strconv"
@@ -15,7 +16,7 @@ func NewParser() *Parser {
 	return &Parser{logger: log.Logger{}, wg: sync.WaitGroup{}}
 }
 
-func (p *Parser) Parse(snapshot *fetcher.RuntimeSnapshot) (*ParsedSnapShot, error) {
+func (p *Parser) Parse(snapshot *snapshot.SnapShot) (*ParsedSnapShot, error) {
 	if snapshot == nil {
 		p.logger.Println("GoroutineDump:", ErrBufEmpty.Error())
 		return nil, ErrBufEmpty
@@ -45,7 +46,7 @@ func (p *Parser) Parse(snapshot *fetcher.RuntimeSnapshot) (*ParsedSnapShot, erro
 
 	p.wg.Wait()
 	result := &ParsedSnapShot{
-		snapshot.Service,
+		snapshot.ServiceName,
 		snapshot.Timestamp,
 		*goroutiness,
 		*blocks,
