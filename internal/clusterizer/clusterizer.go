@@ -22,15 +22,15 @@ const (
 	DEAD         string = "dead"
 )
 
-func Clusterize(snap *parser.ParsedSnapShot) Cluster {
+func (c *Clusterizer) Clustering(snap *parser.ParsedSnapShot) Cluster {
 	cluster := NewCluster()
-	cluster.Goroutines = clusterizeGoroutines(snap.Goroutines)
-	cluster.Block = clusterizeBlock(snap.BlockProfile)
-	cluster.Mutex = clusterizeMutex(snap.MutexProfile)
+	cluster.Goroutines = clusteringGoroutines(snap.Goroutines)
+	cluster.Block = clusteringBlock(snap.BlockProfile)
+	cluster.Mutex = clusteringMutex(snap.MutexProfile)
 	return *cluster
 
 }
-func clusterizeGoroutines(gors []parser.Goroutine) map[string]GoroutineObject {
+func clusteringGoroutines(gors []parser.Goroutine) map[string]GoroutineObject {
 	gorObj := map[string]GoroutineObject{}
 	for _, g := range gors {
 		status, err := findStatus(&g)
@@ -63,7 +63,7 @@ func clusterizeGoroutines(gors []parser.Goroutine) map[string]GoroutineObject {
 	return gorObj
 }
 
-func clusterizeBlock(blocks []parser.Block) map[string]BlockObject {
+func clusteringBlock(blocks []parser.Block) map[string]BlockObject {
 	out := map[string]BlockObject{}
 	for _, b := range blocks {
 		hash := hashFrames(b.Frames)
@@ -83,7 +83,7 @@ func clusterizeBlock(blocks []parser.Block) map[string]BlockObject {
 	return out
 }
 
-func clusterizeMutex(mutexs []parser.Mutex) map[string]MutexObject {
+func clusteringMutex(mutexs []parser.Mutex) map[string]MutexObject {
 	out := map[string]MutexObject{}
 	for _, m := range mutexs {
 		hash := hashFrames(m.Frames)

@@ -2,9 +2,9 @@
 // versions:
 // 	protoc-gen-go v1.36.10
 // 	protoc        v6.32.1
-// source: api/snapshot.proto
+// source: snapshot.proto
 
-package snapshot
+package api
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -23,7 +23,7 @@ const (
 
 type SnapShot struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
-	Name           string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	ServiceName    string                 `protobuf:"bytes,1,opt,name=ServiceName,proto3" json:"ServiceName,omitempty"`
 	Timestamp      int64                  `protobuf:"varint,2,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
 	GoroutineDump  []byte                 `protobuf:"bytes,3,opt,name=GoroutineDump,proto3" json:"GoroutineDump,omitempty"`
 	BlockProfile   []byte                 `protobuf:"bytes,4,opt,name=BlockProfile,proto3" json:"BlockProfile,omitempty"`
@@ -36,7 +36,7 @@ type SnapShot struct {
 
 func (x *SnapShot) Reset() {
 	*x = SnapShot{}
-	mi := &file_api_snapshot_proto_msgTypes[0]
+	mi := &file_snapshot_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -48,7 +48,7 @@ func (x *SnapShot) String() string {
 func (*SnapShot) ProtoMessage() {}
 
 func (x *SnapShot) ProtoReflect() protoreflect.Message {
-	mi := &file_api_snapshot_proto_msgTypes[0]
+	mi := &file_snapshot_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -61,12 +61,12 @@ func (x *SnapShot) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SnapShot.ProtoReflect.Descriptor instead.
 func (*SnapShot) Descriptor() ([]byte, []int) {
-	return file_api_snapshot_proto_rawDescGZIP(), []int{0}
+	return file_snapshot_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *SnapShot) GetName() string {
+func (x *SnapShot) GetServiceName() string {
 	if x != nil {
-		return x.Name
+		return x.ServiceName
 	}
 	return ""
 }
@@ -113,13 +113,13 @@ func (x *SnapShot) GetVersion() string {
 	return ""
 }
 
-var File_api_snapshot_proto protoreflect.FileDescriptor
+var File_snapshot_proto protoreflect.FileDescriptor
 
-const file_api_snapshot_proto_rawDesc = "" +
+const file_snapshot_proto_rawDesc = "" +
 	"\n" +
-	"\x12api/snapshot.proto\x12\afetcher\"\xd7\x02\n" +
-	"\bSnapShot\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\x12\x1c\n" +
+	"\x0esnapshot.proto\x12\afetcher\"\xe5\x02\n" +
+	"\bSnapShot\x12 \n" +
+	"\vServiceName\x18\x01 \x01(\tR\vServiceName\x12\x1c\n" +
 	"\ttimestamp\x18\x02 \x01(\x03R\ttimestamp\x12$\n" +
 	"\rGoroutineDump\x18\x03 \x01(\fR\rGoroutineDump\x12\"\n" +
 	"\fBlockProfile\x18\x04 \x01(\fR\fBlockProfile\x12\"\n" +
@@ -131,23 +131,23 @@ const file_api_snapshot_proto_rawDesc = "" +
 	"\x05value\x18\x02 \x01(\x01R\x05value:\x028\x01B5Z3github.com/2n1k1ch2/gold/cmd/Agent/fetcher;snapshotb\x06proto3"
 
 var (
-	file_api_snapshot_proto_rawDescOnce sync.Once
-	file_api_snapshot_proto_rawDescData []byte
+	file_snapshot_proto_rawDescOnce sync.Once
+	file_snapshot_proto_rawDescData []byte
 )
 
-func file_api_snapshot_proto_rawDescGZIP() []byte {
-	file_api_snapshot_proto_rawDescOnce.Do(func() {
-		file_api_snapshot_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_api_snapshot_proto_rawDesc), len(file_api_snapshot_proto_rawDesc)))
+func file_snapshot_proto_rawDescGZIP() []byte {
+	file_snapshot_proto_rawDescOnce.Do(func() {
+		file_snapshot_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_snapshot_proto_rawDesc), len(file_snapshot_proto_rawDesc)))
 	})
-	return file_api_snapshot_proto_rawDescData
+	return file_snapshot_proto_rawDescData
 }
 
-var file_api_snapshot_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
-var file_api_snapshot_proto_goTypes = []any{
+var file_snapshot_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_snapshot_proto_goTypes = []any{
 	(*SnapShot)(nil), // 0: fetcher.SnapShot
 	nil,              // 1: fetcher.SnapShot.RuntimeMetricsEntry
 }
-var file_api_snapshot_proto_depIdxs = []int32{
+var file_snapshot_proto_depIdxs = []int32{
 	1, // 0: fetcher.SnapShot.runtime_metrics:type_name -> fetcher.SnapShot.RuntimeMetricsEntry
 	1, // [1:1] is the sub-list for method output_type
 	1, // [1:1] is the sub-list for method input_type
@@ -156,26 +156,26 @@ var file_api_snapshot_proto_depIdxs = []int32{
 	0, // [0:1] is the sub-list for field type_name
 }
 
-func init() { file_api_snapshot_proto_init() }
-func file_api_snapshot_proto_init() {
-	if File_api_snapshot_proto != nil {
+func init() { file_snapshot_proto_init() }
+func file_snapshot_proto_init() {
+	if File_snapshot_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_api_snapshot_proto_rawDesc), len(file_api_snapshot_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_snapshot_proto_rawDesc), len(file_snapshot_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_api_snapshot_proto_goTypes,
-		DependencyIndexes: file_api_snapshot_proto_depIdxs,
-		MessageInfos:      file_api_snapshot_proto_msgTypes,
+		GoTypes:           file_snapshot_proto_goTypes,
+		DependencyIndexes: file_snapshot_proto_depIdxs,
+		MessageInfos:      file_snapshot_proto_msgTypes,
 	}.Build()
-	File_api_snapshot_proto = out.File
-	file_api_snapshot_proto_goTypes = nil
-	file_api_snapshot_proto_depIdxs = nil
+	File_snapshot_proto = out.File
+	file_snapshot_proto_goTypes = nil
+	file_snapshot_proto_depIdxs = nil
 }

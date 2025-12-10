@@ -1,6 +1,11 @@
 package clusterizer
 
-var ServiceClusters = map[string]Cluster{}
+import "gold/internal/parser"
+
+type Clusterizer struct {
+	ParsedSnapShotChan     <-chan parser.ParsedSnapShot
+	NormalizedSnapShotChan chan<- Cluster
+}
 
 type Cluster struct {
 	Goroutines map[string]GoroutineObject

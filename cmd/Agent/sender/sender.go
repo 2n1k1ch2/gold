@@ -41,7 +41,7 @@ func (s *DefaultSender) Send(snapshot *fetcher.RuntimeSnapshot) error {
 
 func convertToProto(s *fetcher.RuntimeSnapshot) *snapshot.SnapShot {
 	return &snapshot.SnapShot{
-		Name:           s.ServiceName,
+		ServiceName:    s.ServiceName,
 		Timestamp:      s.Timestamp,
 		GoroutineDump:  s.GoroutineDump,
 		BlockProfile:   s.BlockProfile,
