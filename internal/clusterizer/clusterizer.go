@@ -23,7 +23,7 @@ const (
 )
 
 func (c *Clusterizer) Clustering(snap *parser.ParsedSnapShot) Cluster {
-	cluster := NewCluster()
+	cluster := NewCluster(snap)
 	cluster.Goroutines = clusteringGoroutines(snap.Goroutines)
 	cluster.Block = clusteringBlock(snap.BlockProfile)
 	cluster.Mutex = clusteringMutex(snap.MutexProfile)

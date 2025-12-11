@@ -8,9 +8,13 @@ type Clusterizer struct {
 }
 
 type Cluster struct {
-	Goroutines map[string]GoroutineObject
-	Block      map[string]BlockObject
-	Mutex      map[string]MutexObject
+	Service        string
+	Timestamp      int64
+	Goroutines     map[string]GoroutineObject
+	Block          map[string]BlockObject
+	Mutex          map[string]MutexObject
+	RuntimeMetrics map[string]float64
+	Version        string
 }
 
 type GoroutineObject struct {
@@ -36,10 +40,14 @@ type MutexObject struct {
 	Cycles uint64
 }
 
-func NewCluster() *Cluster {
+func NewCluster(shot *parser.ParsedSnapShot) *Cluster {
 	return &Cluster{
-		Goroutines: make(map[string]GoroutineObject),
-		Block:      make(map[string]BlockObject),
-		Mutex:      make(map[string]MutexObject),
+		Service:        shot.Service,
+		Timestamp:      shot.Timestamp,
+		Goroutines:     make(map[string]GoroutineObject),
+		Block:          make(map[string]BlockObject),
+		Mutex:          make(map[string]MutexObject),
+		RuntimeMetrics: shot.RuntimeMetrics,
+		Version:        shot.Version,
 	}
 }
