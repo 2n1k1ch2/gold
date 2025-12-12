@@ -3,8 +3,8 @@ package clusterizer
 import "gold/internal/parser"
 
 type Clusterizer struct {
-	ParsedSnapShotChan     <-chan parser.ParsedSnapShot
-	NormalizedSnapShotChan chan<- Cluster
+	ParsedSnapShotChan     <-chan *parser.ParsedSnapShot
+	NormalizedSnapShotChan chan<- *Cluster
 }
 
 type Cluster struct {

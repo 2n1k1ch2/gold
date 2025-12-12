@@ -13,8 +13,8 @@ var (
 
 type Parser struct {
 	logger             log.Logger
-	RawSnapShotChan    <-chan snapshot.SnapShot
-	ParsedSnapShotChan chan<- ParsedSnapShot
+	RawSnapShotChan    <-chan *snapshot.SnapShot
+	ParsedSnapShotChan chan<- *ParsedSnapShot
 	wg                 sync.WaitGroup
 }
 

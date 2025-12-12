@@ -10,13 +10,13 @@ import (
 
 type Receiver struct {
 	Listener     net.Listener
-	SnapshotChan chan<- snapshot.SnapShot
+	SnapshotChan chan<- *snapshot.SnapShot
 	Addr         string
 }
 
-func NewReceiver(cfg config.Config, snapshotChan chan<- snapshot.SnapShot) *Receiver {
+func NewReceiver(cfg config.Config) *Receiver {
 	return &Receiver{
-		SnapshotChan: snapshotChan,
+		SnapshotChan: make(chan<- *snapshot.SnapShot, cfg.ChanBufferSize),
 		Addr:         cfg.ReceiverAddr,
 	}
 }
@@ -46,7 +46,7 @@ func (r *Receiver) handleConnection(conn net.Conn) {
 
 	decoder := json.NewDecoder(conn)
 	for {
-		var snap snapshot.SnapShot
+		var snap *snapshot.SnapShot
 		if err := decoder.Decode(&snap); err != nil {
 			log.Printf("Decode error: %v", err)
 			return

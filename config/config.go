@@ -18,6 +18,9 @@ type Config struct {
 
 	// Release-tags
 	ReleaseEnv []string `yaml:"release_env"`
+
+	// Buffer size
+	ChanBufferSize int `yaml:"chan_buffer_size"`
 }
 
 func Load(path string) (*Config, error) {
@@ -50,6 +53,7 @@ func DefaultConfig() *Config {
 		RetentionSnapshots: 30,
 		RetentionWindow:    time.Hour,
 		ReleaseEnv:         []string{},
+		ChanBufferSize:     1024,
 	}
 }
 
