@@ -18,15 +18,20 @@ type PathToFile string
 type Repository struct {
 	files map[PathToFile]ast.File
 }
+type Repositories map[string]Repository
 
-func Translate(root *os.File) Repository {
-	files, err := recTraversal(root.Name())
-	if err != nil {
-		logger.Error("Can't get files from directory")
-		return Repository{}
+func Translate(services ...Service) Repositories {
+	repos := make(Repositories)
+	for _, service := range services {
+		files, err := recTraversal(service.root)
+		if err != nil {
+			logger.Error("Can't get files from directory")
+			return nil
+		}
+		repository := createAstPresentation(files)
+		repos[service.Name+"/"+service.Version] = repository
 	}
-	repository := createAstPresentation(files)
-	return repository
+	return repos
 }
 func recTraversal(rootPath string) (*[]os.File, error) {
 	var result []os.File
@@ -35,7 +40,6 @@ func recTraversal(rootPath string) (*[]os.File, error) {
 		if err != nil {
 			return err
 		}
-
 		if !d.IsDir() && strings.HasSuffix(d.Name(), ".go") {
 			file, err := os.Open(path)
 			if err != nil {
@@ -62,7 +66,7 @@ func createAstPresentation(files *[]os.File) Repository {
 			continue
 		}
 		fset := token.NewFileSet()
-		f, err := parser.ParseFile(fset, file.Name(), src, parser.ParseComments)
+		f, err := parser.ParseFile(fset, file.Name(), src, 0)
 		if err != nil {
 			logger.Error("Can't parse file:" + err.Error())
 			continue
