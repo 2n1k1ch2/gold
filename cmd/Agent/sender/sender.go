@@ -11,11 +11,11 @@ import (
 )
 
 type DefaultSender struct {
-	url string
+	URL string
 }
 
 func NewDefaultSender(url string) *DefaultSender {
-	return &DefaultSender{url: url}
+	return &DefaultSender{URL: url}
 }
 func (s *DefaultSender) Send(snapshot *fetcher.RuntimeSnapshot) error {
 	protoSnapShot := convertToProto(snapshot)
@@ -24,7 +24,7 @@ func (s *DefaultSender) Send(snapshot *fetcher.RuntimeSnapshot) error {
 		return fmt.Errorf("marshal proto: %w", err)
 	}
 
-	resp, err := http.Post(s.url, "application/x-protobuf", bytes.NewBuffer(data))
+	resp, err := http.Post(s.URL, "application/x-protobuf", bytes.NewBuffer(data))
 	if err != nil {
 		return fmt.Errorf("http post: %w", err)
 	}
