@@ -40,6 +40,12 @@ type MutexObject struct {
 	Cycles uint64
 }
 
+func NewClusterizer(shot <-chan *parser.ParsedSnapShot, normalized chan<- *Cluster) *Clusterizer {
+	return &Clusterizer{
+		ParsedSnapShotChan:     shot,
+		NormalizedSnapShotChan: normalized,
+	}
+}
 func NewCluster(shot *parser.ParsedSnapShot) *Cluster {
 	return &Cluster{
 		Service:        shot.Service,
