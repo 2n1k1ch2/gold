@@ -1,6 +1,7 @@
 package receiver
 
 import (
+	"context"
 	"encoding/json"
 	snapshot "gold/api"
 	"gold/config"
@@ -14,53 +15,66 @@ type Receiver struct {
 	Addr         string
 }
 
-func NewReceiver(cfg config.Config) *Receiver {
+func NewReceiver(cfg config.Config, Snaps chan<- *snapshot.SnapShot) *Receiver {
 	return &Receiver{
-		SnapshotChan: make(chan<- *snapshot.SnapShot, cfg.ChanBufferSize),
+		SnapshotChan: Snaps,
 		Addr:         cfg.ReceiverAddr,
 	}
 }
 
-func (r *Receiver) Start() error {
-	listener, err := net.Listen("tcp", r.Addr)
-	if err != nil {
-		return err
-	}
-	r.Listener = listener
-
-	log.Printf("Receiver listening on %s", r.Addr)
-
-	for {
-		conn, err := listener.Accept()
+func (r *Receiver) Start(ctx context.Context) func() {
+	return func() {
+		listener, err := net.Listen("tcp", r.Addr)
 		if err != nil {
-			log.Printf("Accept error: %v", err)
-			continue
+			log.Fatal(err)
 		}
+		r.Listener = listener
 
-		go r.handleConnection(conn)
+		log.Printf("Receiver listening on %s", r.Addr)
+		go func() {
+			<-ctx.Done()
+			_ = listener.Close()
+		}()
+
+		for {
+			conn, err := listener.Accept()
+			if err != nil {
+				select {
+				case <-ctx.Done():
+					return
+				default:
+					log.Printf("Accept error: %v", err)
+					continue
+				}
+			}
+			go r.handleConnection(ctx, conn)
+		}
 	}
 }
-
-func (r *Receiver) handleConnection(conn net.Conn) {
-	defer func() { _ = conn.Close() }()
+func (r *Receiver) handleConnection(ctx context.Context, conn net.Conn) {
+	defer func(conn net.Conn) {
+		err := conn.Close()
+		if err != nil {
+			log.Printf("close connection: %v", err)
+		}
+	}(conn)
 
 	decoder := json.NewDecoder(conn)
 	for {
-		var snap *snapshot.SnapShot
+		var snap snapshot.SnapShot
 		if err := decoder.Decode(&snap); err != nil {
-			log.Printf("Decode error: %v", err)
+			log.Printf("Decode error from %s: %v", conn.RemoteAddr(), err)
 			return
 		}
 
-		r.SnapshotChan <- snap
+		select {
+		case r.SnapshotChan <- &snap:
+		case <-ctx.Done():
+			return
+		}
 	}
 }
 
 func (r *Receiver) Stop() {
-	if r.Listener != nil {
-		err := r.Listener.Close()
-		if err != nil {
-			log.Printf("Close error: %v", err)
-		}
-	}
+
 }
