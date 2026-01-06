@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"context"
 	"fmt"
 	"github.com/google/pprof/profile"
 	snapshot "gold/api"
@@ -12,10 +13,31 @@ import (
 	"sync"
 )
 
-func NewParser() *Parser {
-	return &Parser{logger: log.Logger{}, wg: sync.WaitGroup{}}
+func NewParser(Raw <-chan *snapshot.SnapShot, Parsed chan<- *ParsedSnapShot) *Parser {
+	return &Parser{logger: log.Logger{},
+		RawSnapShotChan:    Raw,
+		ParsedSnapShotChan: Parsed,
+		wg:                 sync.WaitGroup{}}
 }
-
+func (p *Parser) Start(ctx context.Context) func() {
+	return func() {
+		for {
+			select {
+			case <-ctx.Done():
+				p.logger.Println("Shutting down parser...")
+				return
+			default:
+				for snapShot := range p.RawSnapShotChan {
+					parsed, err := p.Parse(snapShot)
+					if err != nil {
+						p.logger.Println(err)
+					}
+					p.ParsedSnapShotChan <- parsed
+				}
+			}
+		}
+	}
+}
 func (p *Parser) Parse(snapshot *snapshot.SnapShot) (*ParsedSnapShot, error) {
 	if snapshot == nil {
 		p.logger.Println("GoroutineDump:", ErrBufEmpty.Error())
