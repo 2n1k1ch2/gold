@@ -1,6 +1,7 @@
 package clusterizer
 
 import (
+	"context"
 	"crypto/sha256"
 	"encoding/hex"
 	"errors"
@@ -22,12 +23,28 @@ const (
 	DEAD         string = "dead"
 )
 
-func (c *Clusterizer) Clustering(snap *parser.ParsedSnapShot) Cluster {
+func (c *Clusterizer) Start(ctx context.Context) func() {
+	return func() {
+		for {
+			select {
+			case <-ctx.Done():
+				log.Println("Shutting down clusterizer...")
+				return
+			default:
+				for parsed := range c.ParsedSnapShotChan {
+					cluster := c.Clustering(parsed)
+					c.NormalizedSnapShotChan <- cluster
+				}
+			}
+		}
+	}
+}
+func (c *Clusterizer) Clustering(snap *parser.ParsedSnapShot) *Cluster {
 	cluster := NewCluster(snap)
 	cluster.Goroutines = clusteringGoroutines(snap.Goroutines)
 	cluster.Block = clusteringBlock(snap.BlockProfile)
 	cluster.Mutex = clusteringMutex(snap.MutexProfile)
-	return *cluster
+	return cluster
 
 }
 func clusteringGoroutines(gors []parser.Goroutine) map[string]GoroutineObject {
