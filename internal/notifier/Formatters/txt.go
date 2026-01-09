@@ -2,7 +2,6 @@ package Formatters
 
 import (
 	"bytes"
-	"fmt"
 	"gold/internal/analyzer"
 	"strconv"
 	"strings"
@@ -24,28 +23,29 @@ const (
 		\t-Type: \t{{.Type}}\n
 		\t-Rate: \t{{.Rate | formatRate}}\n
 	`
-	FullAlertFormat = `----------------\n
-	Alert in {{.ServiceName}}\n
-		\t- Time:\t{{.Timestamp | formatTime}}\n
-		\t- Hash:\t{{.Hash}}\n\n
-		\t- Type:\t{{.Type}}\n
-		\t- Description\t{{.Description}\n
-		\t- Advice\t{{.Advice}}\n\n
-	Statistic:\n
-		\t- Previous count: {{.PrevCount}}
-		\t- New count: {{.NewCount}}
-		\t- Rate: {{printf "%.2f" .Rate}}%
-		\t- Cycles: {{.Cycles}}\n\n
-	Path:\n
-		\t- Length:{{len .Frames}}
-		{{Frames | formatFrames	}}		
-	`
 	ShortInfoFormat = `----------------\n
 	ServiceName: {{.ServiceName}}\n
 		\t-Time: \t{{.Timestamp | formatTime}}\n
 		\t-Goroutine Count: \t{{.Goroutine}}\n
 		\t-Alerts: \t{{.Alerts}}\n
 	`
+
+	//FullAlertFormat = `----------------\n
+	//Alert in {{.ServiceName}}\n
+	//	\t- Time:\t{{.Timestamp | formatTime}}\n
+	//	\t- Hash:\t{{.Hash}}\n\n
+	//	\t- Type:\t{{.Type}}\n
+	//	\t- Description\t{{.Description}\n
+	//	\t- Advice\t{{.Advice}}\n\n
+	//Statistic:\n
+	//	\t- Previous count: {{.PrevCount}}
+	//	\t- New count: {{.NewCount}}
+	//	\t- Rate: {{printf "%.2f" .Rate}}%
+	//	\t- Cycles: {{.Cycles}}\n\n
+	//Path:\n
+	//	\t- Length:{{len .Frames}}
+	//	{{Frames | formatFrames	}}
+	//`
 )
 
 func init() {
@@ -61,9 +61,8 @@ func init() {
 		},
 	}
 	alertTmplShort = template.Must(template.New("short").Funcs(funcMap).Parse(ShortAlertFormat))
-	alertTmplFull = template.Must(template.New("full").Funcs(funcMap).Parse(FullAlertFormat))
 	infoTmplShort = template.Must(template.New("info").Funcs(funcMap).Parse(ShortInfoFormat))
-
+	//alertTmplFull = template.Must(template.New("full").Funcs(funcMap).Parse(FullAlertFormat))
 }
 
 var bufPool = sync.Pool{
