@@ -3,6 +3,7 @@ package fetcher
 import (
 	"bytes"
 	"encoding/gob"
+	"gold/cmd/Agent/config"
 	"runtime"
 	"runtime/metrics"
 	"time"
@@ -12,13 +13,15 @@ type DefaultFetcher struct {
 	IncludeBlockProfile bool
 	IncludeMutexProfile bool
 	IncludeMetrics      bool
+	cfg                 config.AgentConfig
 }
 
-func NewRuntimeFetcher(BlockProfile, MutexProfile, Metrics bool) *DefaultFetcher {
+func NewRuntimeFetcher(BlockProfile, MutexProfile, Metrics bool, cfg config.AgentConfig) *DefaultFetcher {
 	return &DefaultFetcher{
 		IncludeBlockProfile: BlockProfile,
 		IncludeMutexProfile: MutexProfile,
 		IncludeMetrics:      Metrics,
+		cfg:                 cfg,
 	}
 }
 
@@ -90,13 +93,13 @@ func (f *DefaultFetcher) Collect() (*RuntimeSnapshot, error) {
 	// 6) Build snapshot
 	// ---------------------
 	snap := &RuntimeSnapshot{
-		ServiceName:    "",
+		ServiceName:    f.cfg.ServiceName,
 		Timestamp:      time.Now().Unix(),
 		GoroutineDump:  gorDump,
 		BlockProfile:   blockBuf,
 		MutexProfile:   mutexBuf,
 		RuntimeMetrics: metricsMap,
-		Version:        runtime.Version(),
+		Version:        f.cfg.Version,
 	}
 
 	return snap, nil
