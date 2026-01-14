@@ -1,6 +1,7 @@
 package sender
 
 import (
+	"context"
 	"fmt"
 	"gold/cmd/Agent/config"
 	"gold/cmd/Agent/fetcher"
@@ -38,7 +39,8 @@ func TestSend(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	if err = sender.Send(snap); err != nil {
+
+	if err = sender.Send(context.Background(), snap); err != nil {
 		t.Error(err)
 	}
 
